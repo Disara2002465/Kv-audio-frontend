@@ -1,26 +1,32 @@
 import './App.css';
-import ProductCard from './components/ProductCard';
+import ProductCard from"./components/productCard";
+import { MdOutlineBluetoothAudio } from "react-icons/md";
+import { BsGraphDown } from "react-icons/bs";
+import { FaRegBookmark } from "react-icons/fa";
+import { MdOutlineSpeaker } from "react-icons/md";
+import { FaRegUser } from "react-icons/fa";
 
 function App() {
   return (
-    <div>
-      <ProductCard 
-        name="Audio Setup" 
-        price="3250/-" 
-        description="A rental shop for audio items provides high-quality sound equipment, including speakers, microphones, mixers, and amplifiers, for events, parties, and professional use." 
-        photoUrl="https://xmobile.lk/wp-content/uploads/2024/06/JBL-PartyBox-On-the-Go-Essential-Portable-Outdoor-Speaker.jpg" 
-      />
+    <div className="w-full h-screen flex">
+      <div className="w-[400px] h-full bg-green-200">
+      <button className="w-full h- [40px] text-[25px] font-bold  flex justify center items-center"><BsGraphDown/> Dashboard</button>
+
       
+      <button className="w-full h- [40px] text-[25px] font-bold flex  justify center items-center"><FaRegBookmark/> Booking </button>
+      <button className="w-full h- [40px] text-[25px] font-bold flex  justify center items-center"><MdOutlineSpeaker />Items</button>
       
+      <button className="w-full h- [40px] text-[25px] font-bold flex  justify center items-center"> <FaRegUser />User</button>
+      </div>
+      <div className="w-full bg-red-900">
       
-      <ProductCard 
-        name="Mini gaming machine" 
-        price="2250/-" 
-        description="Professional Mini gaming machine for high-quality sound blending and party experiences." 
-        photoUrl="https://www.nerdly.co.uk/wp-content/uploads/2019/02/mini-arcade-1.jpg" />
+
+      </div>
     </div>
   );
 }
-
+ 
 export default App;
+
+
 
