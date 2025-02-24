@@ -1,32 +1,19 @@
-import './App.css';
-import ProductCard from"./components/productCard";
-import { MdOutlineBluetoothAudio } from "react-icons/md";
-import { BsGraphDown } from "react-icons/bs";
-import { FaRegBookmark } from "react-icons/fa";
-import { MdOutlineSpeaker } from "react-icons/md";
-import { FaRegUser } from "react-icons/fa";
+import "./App.css";
+import AdminPage from "./pages/admin/adminPage";
+import HomePage from "./pages/home/homePage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 
 function App() {
   return (
-    <div className="w-full h-screen flex">
-      <div className="w-[400px] h-full bg-green-200">
-      <button className="w-full h- [40px] text-[25px] font-bold  flex justify center items-center"><BsGraphDown/> Dashboard</button>
-
-      
-      <button className="w-full h- [40px] text-[25px] font-bold flex  justify center items-center"><FaRegBookmark/> Booking </button>
-      <button className="w-full h- [40px] text-[25px] font-bold flex  justify center items-center"><MdOutlineSpeaker />Items</button>
-      
-      <button className="w-full h- [40px] text-[25px] font-bold flex  justify center items-center"> <FaRegUser />User</button>
-      </div>
-      <div className="w-full bg-red-900">
-      
-
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage/>} />
+        <Route path="/admin/*" element={<AdminPage />} />
+        
+      </Routes>
+    </BrowserRouter>
   );
 }
- 
+
 export default App;
-
-
-
