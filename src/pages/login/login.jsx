@@ -2,8 +2,8 @@ import "./login.css";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -24,6 +24,7 @@ export default function LoginPage() {
         toast.success("Login Successful");
 
         const user = res.data.user;
+        localStorage.setItem("token", res.data.token);
         if (user.role === "admin") {
           navigate("/admin/");
         } else {
