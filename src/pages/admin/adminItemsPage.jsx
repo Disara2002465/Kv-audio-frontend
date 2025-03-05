@@ -1,101 +1,122 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CiCirclePlus } from "react-icons/ci";
-import { Link } from "react-router-dom";
-
-const sampleArr = [
-  {
-    key: "p001",
-    name: "Wireless Headphones",
-    price: 49.99,
-    category: ["Electronics", "Audio"],
-    dimensions: { width: 15, height: 20, depth: 5 },
-    description: "High-quality wireless headphones with noise cancellation.",
-    availability: true,
-    image: "https://example.com/images/wireless-headphones.jpg",
-  },
-  {
-    key: "p002",
-    name: "Mechanical Keyboard",
-    price: 79.99,
-    category: ["Electronics", "Computers"],
-    dimensions: { width: 45, height: 15, depth: 5 },
-    description: "RGB backlit mechanical keyboard with blue switches.",
-    availability: true,
-    image: "https://example.com/images/mechanical-keyboard.jpg",
-  },
-  {
-    key: "p003",
-    name: "Gaming Mouse",
-    price: 29.99,
-    category: ["Electronics", "Gaming Accessories"],
-    dimensions: { width: 6, height: 12, depth: 3 },
-    description: "Ergonomic gaming mouse with adjustable DPI.",
-    availability: true,
-    image: "https://example.com/images/gaming-mouse.jpg",
-  },
-  {
-    key: "p004",
-    name: "Smartwatch",
-    price: 99.99,
-    category: ["Electronics", "Wearables"],
-    dimensions: { width: 4, height: 10, depth: 1 },
-    description: "Feature-packed smartwatch with fitness tracking.",
-    availability: false,
-    image: "https://example.com/images/smartwatch.jpg",
-  },
-  {
-    key: "p005",
-    name: "LED Desk Lamp",
-    price: 19.99,
-    category: ["Home & Office", "Lighting"],
-    dimensions: { width: 12, height: 40, depth: 12 },
-    description: "Adjustable LED desk lamp with multiple brightness settings.",
-    availability: true,
-    image: "https://example.com/images/led-desk-lamp.jpg",
-  },
-];
+import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function AdminItemsPage() {
-  const [items, setItems] = useState(sampleArr);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  // Fetch items from backend
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get("http://localhost:3000/api/products/", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        console.log("Fetched data:", res.data);
+        setItems(res.data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Handle item deletion
+  const handleDelete = (key) => {
+    if (window.confirm("Are you sure you want to delete this item?")) {
+      setItems(items.filter((item) => item.key !== key));
+
+      const token = localStorage.getItem("token");
+      axios
+        .delete(`http://localhost:3000/api/products/${key}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => console.error("Error deleting item:", err));
+    }
+  };
 
   return (
-    <div className="w-full h-full relative p-4">
-      <table className="w-full border-collapse border border-gray-300">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="border p-2">Key</th>
-            <th className="border p-2">Name</th>
-            <th className="border p-2">Price ($)</th>
-            <th className="border p-2">Category</th>
-            <th className="border p-2">Dimensions (W×H×D cm)</th>
-            <th className="border p-2">Availability</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((product) => (
-            <tr
-              key={product.key}
-              className="text-center border hover:bg-gray-100"
-            >
-              <td className="border p-2">{product.key}</td>
-              <td className="border p-2">{product.name}</td>
-              <td className="border p-2">${product.price.toFixed(2)}</td>
-              <td className="border p-2">{product.category.join(", ")}</td>
-              <td className="border p-2">
-                {product.dimensions.width}×{product.dimensions.height}×
-                {product.dimensions.depth} cm
-              </td>
-              <td className="border p-2">
-                {product.availability ? (
-                  <span className="text-green-600 font-bold">Available</span>
-                ) : (
-                  <span className="text-red-600 font-bold">Not Available</span>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="w-full min-h-screen p-6 bg-gray-100 flex flex-col items-center">
+      {/* Loader (Shows while fetching data) */}
+      {loading && (
+        <div className="border-4 my-4 border-b-green-500 rounded-full animate-spin w-16 h-16"></div>
+      )}
+
+      {!loading && (
+        <div className="bg-white shadow-lg rounded-lg p-4 w-full max-w-6xl">
+          <h1 className="text-2xl font-semibold text-gray-800 mb-4">
+            Admin Items
+          </h1>
+
+          {/* Items Table */}
+          <table className="w-full border border-gray-300 rounded-lg overflow-hidden shadow-md">
+            <thead>
+              <tr className="bg-gray-200 text-gray-700 text-sm uppercase">
+                <th className="p-3 border">Key</th>
+                <th className="p-3 border">Name</th>
+                <th className="p-3 border">Price ($)</th>
+                <th className="p-3 border">Category</th>
+                <th className="p-3 border">Dimensions (W×H×D cm)</th>
+                <th className="p-3 border">Availability</th>
+                <th className="p-3 border">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((product) => (
+                <tr
+                  key={product.key}
+                  className="text-center bg-white border-b hover:bg-gray-50 transition"
+                >
+                  <td className="p-3 border">{product.key}</td>
+                  <td className="p-3 border font-medium">{product.name}</td>
+                  <td className="p-3 border text-green-600 font-semibold">
+                    ${product.price.toFixed(2)}
+                  </td>
+                  <td className="p-3 border">{product.category.join(", ")}</td>
+                  <td className="p-3 border">{product.dimensions}</td>
+                  <td className="p-3 border">
+                    {product.availability ? (
+                      <span className="px-3 py-1 text-sm font-medium bg-green-200 text-green-800 rounded-full">
+                        Available
+                      </span>
+                    ) : (
+                      <span className="px-3 py-1 text-sm font-medium bg-red-200 text-red-800 rounded-full">
+                        Not Available
+                      </span>
+                    )}
+                  </td>
+                  <td className="p-3 border flex justify-center space-x-3">
+                    <button
+                      onClick={() =>
+                        navigate(`/admin/items/edit`, { state: product })
+                      }
+                    >
+                      <FiEdit className="text-blue-500 hover:text-blue-700 cursor-pointer text-xl transition duration-200" />
+                    </button>
+                    <button onClick={() => handleDelete(product.key)}>
+                      <FiTrash2 className="text-red-500 hover:text-red-700 cursor-pointer text-xl transition duration-200" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Add Product Button */}
       <Link to="/admin/items/add">
         <CiCirclePlus className="text-[70px] absolute right-4 bottom-4 text-gray-700 hover:text-red-900 transition-all duration-300" />
       </Link>

@@ -2,8 +2,9 @@ import { BsGraphDown } from "react-icons/bs";
 import { FaRegBookmark, FaRegUser } from "react-icons/fa";
 import { MdOutlineSpeaker } from "react-icons/md";
 import { Routes, Route, Link } from "react-router-dom";
-import AdminItemsPage from "./adminItemsPage"; // Import missing component
-import AddItemsPage from "./addItemsPage"; // Import missing component
+import AdminItemsPage from "./adminItemsPage"; // Your Admin Items component
+import AddItemsPage from "./addItemsPage"; // Your Add Items component
+import UpdateItemsPage from "./updateItemPage"; // Your Update Items component
 
 export default function AdminPage() {
   return (
@@ -47,6 +48,7 @@ export default function AdminPage() {
           <Route path="/items" element={<AdminItemsPage />} />
           <Route path="/items/add" element={<AddItemsPage />} />
           <Route path="/users" element={<h1>Users</h1>} />
+          <Route path="/items/edit" element={<UpdateItemsPage />} />
         </Routes>
       </div>
     </div>

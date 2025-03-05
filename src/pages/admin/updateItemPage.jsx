@@ -4,7 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
 
-export default function AddItemsPage() {
+export default function UpdateItemsPage() {
   const location = useLocation(); // Ensure location is initialized before use
   const navigate = useNavigate();
 
@@ -96,10 +96,11 @@ export default function AddItemsPage() {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-gray-100">
-      <h1 className="text-2xl font-bold mb-4">Add Item</h1>
+      <h1 className="text-2xl font-bold mb-4">Update Item</h1>
 
       <div className="w-[400px] border border-gray-300 bg-white shadow-md rounded-lg p-6 flex flex-col items-center gap-4">
         <input
+          disabled
           type="text"
           placeholder="Product Key"
           value={productKey}
@@ -178,7 +179,7 @@ export default function AddItemsPage() {
             onClick={handleUpdateItem}
             className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-600 transition"
           >
-            <CiCirclePlus size={20} /> Add Item
+            <CiCirclePlus size={20} /> Update Item
           </button>
           <button
             onClick={() => navigate("/admin/items")}
