@@ -67,20 +67,16 @@ export default function AddItemsPage() {
       key: productKey,
       name: productName,
       price: parseFloat(productPrice),
-      category: productCategory.split(",").map((cat) => cat.trim()), // Convert string to array
-      dimensions: {
-        width: productWidth ? parseFloat(productWidth) : undefined,
-        height: productHeight ? parseFloat(productHeight) : undefined,
-        depth: productDepth ? parseFloat(productDepth) : undefined,
-      },
+      category: productCategory.split(",").map((category) => category.trim()), // Convert string to array
+      dimensions: `${productWidth}*${productHeight}*${productDepth}`,
       description: productDescription,
       imageUrl: productImage,
       availability: true,
     };
 
     try {
-      const result = await axios.put(
-        `http://localhost:3000/api/products/${productKey}`,
+      const result = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/products/`,
         updatedItem,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -96,7 +92,7 @@ export default function AddItemsPage() {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-gray-100">
-      <h1 className="text-2xl font-bold mb-4">Add Item</h1>
+      <h1 className="text-2xl font-bold mb-4">dd Item</h1>
 
       <div className="w-[400px] border border-gray-300 bg-white shadow-md rounded-lg p-6 flex flex-col items-center gap-4">
         <input

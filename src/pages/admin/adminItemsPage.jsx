@@ -15,9 +15,12 @@ export default function AdminItemsPage() {
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:3000/api/products/", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/products/`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         console.log("Fetched data:", res.data);
         setItems(res.data);
       } catch (err) {
@@ -37,7 +40,7 @@ export default function AdminItemsPage() {
 
       const token = localStorage.getItem("token");
       axios
-        .delete(`http://localhost:3000/api/products/${key}`, {
+        .delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/${key}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -75,27 +78,14 @@ export default function AdminItemsPage() {
             </thead>
             <tbody>
               {items.map((product) => (
-                <tr
-                  key={product.key}
-                  className="text-center bg-white border-b hover:bg-gray-50 transition"
-                >
+                <tr key={product.key}>
                   <td className="p-3 border">{product.key}</td>
-                  <td className="p-3 border font-medium">{product.name}</td>
-                  <td className="p-3 border text-green-600 font-semibold">
-                    ${product.price.toFixed(2)}
-                  </td>
-                  <td className="p-3 border">{product.category.join(", ")}</td>
-                  <td className="p-3 border">{product.dimensions}</td>
+                  <td className="p-3 border">{product.name}</td>
+                  <td className="p-3 border">{product.price}</td>
+                  <td className="p-3 border">{product.category?.join(", ")}</td>
+                  <td className="p-3 border">{product.dimensions} CM</td>
                   <td className="p-3 border">
-                    {product.availability ? (
-                      <span className="px-3 py-1 text-sm font-medium bg-green-200 text-green-800 rounded-full">
-                        Available
-                      </span>
-                    ) : (
-                      <span className="px-3 py-1 text-sm font-medium bg-red-200 text-red-800 rounded-full">
-                        Not Available
-                      </span>
-                    )}
+                    {product.availability ? "Available" : "Out of Stock"}
                   </td>
                   <td className="p-3 border flex justify-center space-x-3">
                     <button

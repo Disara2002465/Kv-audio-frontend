@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CiCirclePlus } from "react-icons/ci";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -10,6 +10,7 @@ export default function UpdateItemsPage() {
 
   // Use optional chaining to prevent errors if location.state is undefined
   const product = location.state || {};
+  console.log(product);
 
   const [productKey, setProductKey] = useState(product.key || "");
   const [productName, setProductName] = useState(product.name || "");
@@ -23,7 +24,16 @@ export default function UpdateItemsPage() {
   const [productDescription, setProductDescription] = useState(
     product.description || ""
   );
-  const [productImage, setProductImage] = useState("");
+  // const [productImage, setProductImage] = useState("");
+
+  useEffect(() => {
+    if (product.dimensions) {
+      const [width, height, depth] = product.dimensions.split("*");
+      setProductWidth(width);
+      setProductHeight(height);
+      setProductDepth(depth);
+    }
+  }, [product.dimensions]);
 
   // Function to validate form inputs
   function validateForm() {
@@ -32,8 +42,8 @@ export default function UpdateItemsPage() {
       !productName ||
       !productPrice ||
       !productCategory ||
-      !productDescription ||
-      !productImage
+      !productDescription
+      // !productImage
     ) {
       toast.error("Please fill in all required fields.");
       return false;
@@ -67,20 +77,16 @@ export default function UpdateItemsPage() {
       key: productKey,
       name: productName,
       price: parseFloat(productPrice),
-      category: productCategory.split(",").map((cat) => cat.trim()), // Convert string to array
-      dimensions: {
-        width: productWidth ? parseFloat(productWidth) : undefined,
-        height: productHeight ? parseFloat(productHeight) : undefined,
-        depth: productDepth ? parseFloat(productDepth) : undefined,
-      },
+      category: productCategory,
+      dimensions: `${productWidth}*${productHeight}*${productDepth}`,
       description: productDescription,
-      imageUrl: productImage,
+      // imageUrl: productImage,
       availability: true,
     };
 
     try {
       const result = await axios.put(
-        `http://localhost:3000/api/products/${productKey}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/products/${productKey}`,
         updatedItem,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -164,14 +170,14 @@ export default function UpdateItemsPage() {
           onChange={(e) => setProductDescription(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
         />
-
+        {/* 
         <input
           type="text"
           placeholder="Product Image URL"
           value={productImage}
           onChange={(e) => setProductImage(e.target.value)}
           className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
-        />
+        /> */}
 
         {/* Buttons */}
         <div className="w-full flex gap-2">
