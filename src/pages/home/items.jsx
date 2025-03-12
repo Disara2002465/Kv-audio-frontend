@@ -9,7 +9,7 @@ export default function Items() {
   useEffect(() => {
     if (state === "loading") {
       axios
-        .get(`${import.meta.env.VITE_BACKEND_URL}/api/product`)
+        .get(`${import.meta.env.VITE_BACKEND_URL}/api/products`)
         .then((res) => {
           console.log(res.data);
           setItems(res.data);
