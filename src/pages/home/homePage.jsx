@@ -3,6 +3,7 @@ import Header from "../../components/header";
 import Contact from "./contact";
 import Gallery from "./gallery";
 import Items from "./items";
+import ProductOverview from "./productOverview";
 
 export default function HomePage() {
   return (
@@ -13,8 +14,10 @@ export default function HomePage() {
           <Route path="/" element={<Home />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/gallery" element={<Gallery />} />
+
           <Route path="/items" element={<Items />} />
-          {/* <Route path="/*" element={<ErrorNotFound />} /> */}
+          <Route path="/product/:key" element={<ProductOverview />} />
+          {/* <Route path="/*" element={<ErrorNotFound />} /> 
           {/* Wildcard route for invalid paths */}
         </Routes>
       </div>

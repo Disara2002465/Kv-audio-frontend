@@ -1,4 +1,5 @@
-// import "./productCard.css";
+import { Link } from "react-router-dom";
+
 export default function ProductCard({ item }) {
   return (
     <div className="max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white p-4 border border-gray-200 relative ">
@@ -37,7 +38,12 @@ export default function ProductCard({ item }) {
 
       {/* Buy Now Button */}
       <button className="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">
-        Buy Now
+        <Link
+          to={"/product/" + item.key}
+          className="text-center w-[90%] h-[40px] bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+        >
+          View Details
+        </Link>
       </button>
     </div>
   );
