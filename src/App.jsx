@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/login/login";
 import RegisterPage from "./pages/register/register";
 import { Toaster } from "react-hot-toast";
+import BookingPage from "./pages/home/bookingPage";
 
 function App() {
   return (
@@ -15,7 +16,9 @@ function App() {
         <Route path="/testing" element={<Testing />} />
         <Route path="/admin/*" element={<AdminPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/cart" element={<BookingPage />} />
+
+        <Route path="/admin/*" element={<AdminPage />} />
         <Route path="/*" element={<HomePage />} />
       </Routes>
     </BrowserRouter>

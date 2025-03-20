@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import ImageSlider from "../../components/imageSlider";
+import { addToCart } from "../../utils/cart";
+import { toast } from "react-toastify";
 
 export default function ProductOverview() {
   const { key } = useParams();
@@ -65,6 +67,16 @@ export default function ProductOverview() {
             <span className="font-medium">Dimensions:</span>{" "}
             {product?.dimensions ?? "Not specified"}
           </div>
+          <button
+            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md"
+            onClick={() => {
+              addToCart(product.key, 1);
+              toast.success("added to Cart");
+              console.log("Added to cart:", product.key);
+            }}
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
     </div>

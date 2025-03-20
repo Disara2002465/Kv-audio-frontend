@@ -121,7 +121,6 @@ export default function AddItemsPage() {
       </h1>
 
       <div className="w-[400px] border border-gray-300 bg-white shadow-md rounded-lg p-6 flex flex-col items-center gap-4">
-        <span>key</span>
         <input
           type="text"
           placeholder="Product Key"
