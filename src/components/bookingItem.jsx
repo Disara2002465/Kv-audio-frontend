@@ -51,7 +51,9 @@ export default function BookingItem({ itemKey, qty, refresh }) {
 
       {/* Product Details */}
       <div className="flex flex-row items-center relative  w-full">
-        <h3 className="text-lg font-semibold text- bg-blue-900">{item.name}</h3>
+        <h3 className="text-lg font-semibold text-blue-700 bg-white ">
+          {item.name}
+        </h3>
         <div className="flex absolute right-0 gap-4">
           <p className="font-medium w-[70px] text-center">
             {item.price.toFixed(2)}
@@ -68,7 +70,7 @@ export default function BookingItem({ itemKey, qty, refresh }) {
             </button>
             {qty}
             <button
-              className="absolute bottom-[-20px] hover:text- bg-blue-900"
+              className="absolute bottom-[-20px] hover:text- bg-white"
               onClick={() => {
                 if (qty == 1) {
                   removeFromCart(itemKey);
@@ -82,7 +84,7 @@ export default function BookingItem({ itemKey, qty, refresh }) {
               <FaArrowDown />
             </button>
           </p>
-          <p className="text-lg font-semibold text-accent">
+          <p className="text-lg font-semibold text-blue-500 bg-white">
             {(item.price * qty).toFixed(2)}
           </p>
         </div>
