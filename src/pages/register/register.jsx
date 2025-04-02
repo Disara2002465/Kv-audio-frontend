@@ -1,8 +1,8 @@
 import { useState } from "react";
-import "./register.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import "./register.css";
 
 export default function RegisterPage() {
   const [firstName, setFirstName] = useState("");
@@ -19,20 +19,22 @@ export default function RegisterPage() {
 
     axios
       .post(`${import.meta.env.VITE_BACKEND_URL}/api/users/register`, {
-        firstName: firstName,
-        lastName: lastName,
-        email: email, // Added email field
-        password: password,
-        address: address,
-        phone: phone,
+        firstName,
+        lastName,
+        email,
+        password,
+        address,
+        phone,
       })
       .then((res) => {
-        toast.success("Registration Success");
+        toast.success("Registration Successful!");
+        navigate("/login"); // ✅ Redirect to login page after success
       })
       .catch((err) => {
         toast.error(err.response?.data?.error || "An error occurred");
       });
   }
+
   return (
     <div
       className="w-full h-screen flex justify-center items-center bg-cover bg-center"
@@ -54,6 +56,7 @@ export default function RegisterPage() {
           className="w-full bg-transparent border-b-2 border-white text-white text-lg outline-none py-2 my-2 text-center"
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
+          required
         />
         <input
           type="text"
@@ -61,6 +64,7 @@ export default function RegisterPage() {
           className="w-full bg-transparent border-b-2 border-white text-white text-lg outline-none py-2 my-2 text-center"
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
+          required
         />
         <input
           type="email"
@@ -68,6 +72,7 @@ export default function RegisterPage() {
           className="w-full bg-transparent border-b-2 border-white text-white text-lg outline-none py-2 my-2 text-center"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
         <input
           type="password"
@@ -75,6 +80,7 @@ export default function RegisterPage() {
           className="w-full bg-transparent border-b-2 border-white text-white text-lg outline-none py-2 my-2 text-center"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
         <input
           type="text"
@@ -82,6 +88,7 @@ export default function RegisterPage() {
           className="w-full bg-transparent border-b-2 border-white text-white text-lg outline-none py-2 my-2 text-center"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
+          required
         />
         <input
           type="tel"
@@ -89,6 +96,7 @@ export default function RegisterPage() {
           className="w-full bg-transparent border-b-2 border-white text-white text-lg outline-none py-2 my-2 text-center"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
+          required
         />
 
         <button

@@ -32,7 +32,9 @@ function Home() {
       className="h-full w-full bg-cover bg-center flex flex-col justify-center items-center text-white px-4"
       style={{ backgroundImage: "url('home.jpg')" }} // Change to your image path
     >
-      <h1 className="text-4xl font-bold mb-4">Welcome to Our Home Page</h1>
+      <h1 className="text-4xl font-bold mb-4 text-center w-full ">
+        Welcome to Our Home Page
+      </h1>
 
       <div className="bg-black bg-opacity-50 p-6 rounded-xl shadow-lg max-w-lg text-center">
         <h2 className="text-2xl font-semibold mb-2">OUR VISION</h2>

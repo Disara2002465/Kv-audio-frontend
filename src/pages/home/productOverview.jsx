@@ -40,7 +40,7 @@ export default function ProductOverview() {
   }
 
   return (
-    <div className="w-full h-full flex justify-center items-center p-6">
+    <div className="w-full  flex flex-col justify-center items-center p-6">
       <div className="w-full max-w-4xl flex flex-col md:flex-row bg-white shadow-lg p-6 rounded-lg">
         {/* Product Images */}
         <div className="w-full md:w-1/2">
@@ -51,17 +51,17 @@ export default function ProductOverview() {
 
         {/* Product Details */}
         <div className="w-full md:w-1/2 flex flex-col items-start p-6">
-          <h1 className="text-3xl font-bold text-blue-500">
+          <h1 className="hidden md:block text-3xl font-bold text-blue-500">
             {product?.name || "Unknown Product"}
           </h1>
           <h2 className="text-xl font-semibold text-gray-800 mt-2">
-            {product?.category?.join(", ") || "No category available"}
+            {product?.category?.join(", ") || "No category available"} category
           </h2>
-          <p className="text-gray-700 mt-4">
+          <p className="text-gray-700 mt-4 text-ce">
             {product?.description || "No description provided."}
           </p>
           <p className="text-lg font-bold text-green-600 mt-2">
-            LKR {product?.price ?? "N/A"}
+            LKR {product.price.toFixed(2)}
           </p>
           <div className="mt-4 text-sm text-gray-600">
             <span className="font-medium">Dimensions:</span>{" "}
