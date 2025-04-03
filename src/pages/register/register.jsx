@@ -26,12 +26,12 @@ export default function RegisterPage() {
         address,
         phone,
       })
-      .then((res) => {
-        toast.success("Registration Successful!");
-        navigate("/login"); // ✅ Redirect to login page after success
+      .then(() => {
+        toast.success("Registration Success");
+        navigate("/login");
       })
       .catch((err) => {
-        toast.error(err.response?.data?.error || "An error occurred");
+        toast.error(err?.response?.data?.error || "An error occured");
       });
   }
 
