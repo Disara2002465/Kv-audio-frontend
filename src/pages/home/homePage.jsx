@@ -13,11 +13,13 @@ export default function HomePage() {
       <div className="h-[calc(100vh-100px)] w-full  ">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/*" element={<Home />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/booking" element={<BookingPage />} />
           <Route path="/items" element={<Items />} />
           <Route path="/product/:key" element={<ProductOverview />} />
+
           {/* <Route path="/*" element={<ErrorNotFound />} /> 
           {/* Wildcard route for invalid paths */}
         </Routes>
