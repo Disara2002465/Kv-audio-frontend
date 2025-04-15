@@ -1,8 +1,6 @@
 import { motion } from "framer-motion";
 import {
   FaFacebook,
-  FaInstagram,
-  FaTwitter,
   FaPhone,
   FaEnvelope,
   FaMapMarkerAlt,
@@ -48,12 +46,12 @@ const Contact = () => {
         `${import.meta.env.VITE_BACKEND_URL}/api/inquiries`,
         {
           name: formData.name,
-          email: formData.email, // <-- included email (optional)
+          email: formData.email,
           message: formData.message,
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // only if your backend requires auth
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -107,9 +105,14 @@ const Contact = () => {
             <span>kv_audio77@example.com</span>
           </div>
           <div className="flex space-x-4 text-blue-600 text-2xl mt-4">
-            <FaFacebook className="cursor-pointer hover:text-blue-800" />
-            <FaInstagram className="cursor-pointer hover:text-pink-600" />
-            <FaTwitter className="cursor-pointer hover:text-blue-400" />
+            <a
+              href="https://www.facebook.com/groups/397208119429824/?ref=share&mibextid=NSMWBT"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-blue-800"
+            >
+              <FaFacebook className="cursor-pointer" />
+            </a>
           </div>
         </motion.div>
 

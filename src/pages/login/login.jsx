@@ -3,11 +3,35 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useGoogleLogin } from "@react-oauth/google";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const googleLogin = useGoogleLogin({
+    onSuccess: (res) => {
+      console.log(res);
+      axios
+        .post("${import.meta.env.VITE_BACKEND_URL}/api/users/google", {
+          accessToken: res.access_token,
+        })
+        .then((res) => {
+          console.log(res);
+          toast.success("Login Success");
+          const user = res.data.user;
+          localStorage.setItem("token", res.data.token);
+          if (user.role === "admin") {
+            navigate("/admin/");
+          } else {
+            navigate("/");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  });
 
   function handleOnSubmit(e) {
     e.preventDefault();
@@ -75,6 +99,13 @@ export default function LoginPage() {
             className="my-6 w-[300px] h-[50px] bg-amber-400 text-2xl text-white rounded-lg"
           >
             Login
+          </button>
+          <button
+            type="submit"
+            className="my-6 w-[300px] h-[50px] bg-amber-400 text-2xl text-white rounded-lg"
+            onClick={googleLogin}
+          >
+            Login with Google
           </button>
 
           {/* Register Link */}
