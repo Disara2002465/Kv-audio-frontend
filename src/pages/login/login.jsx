@@ -1,8 +1,7 @@
 import "./login.css";
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-// import { toast } from "react-toastify";
+import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 
 export default function LoginPage() {
@@ -12,7 +11,6 @@ export default function LoginPage() {
 
   function handleOnSubmit(e) {
     e.preventDefault();
-    console.log(email, password);
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
     axios
@@ -21,13 +19,12 @@ export default function LoginPage() {
         password: password,
       })
       .then((res) => {
-        console.log(res);
         toast.success("Login Successful");
 
         const user = res.data.user;
         localStorage.setItem("token", res.data.token);
 
-        if (user.emailVerified == false) {
+        if (user.emailVerified === false) {
           navigate("/verify-email");
           return;
         }
@@ -39,8 +36,6 @@ export default function LoginPage() {
         }
       })
       .catch((err) => {
-        console.log(err);
-        console.error(err.response?.data?.error || "Login failed");
         toast.error(err.response?.data?.error || "Invalid Credentials");
       });
   }
@@ -55,7 +50,7 @@ export default function LoginPage() {
       }}
     >
       <form onSubmit={handleOnSubmit}>
-        <div className="w-[400px] h-[400px] backdrop-blur-xl rounded-2xl flex flex-col justify-center items-center relative">
+        <div className="w-[400px] h-[450px] backdrop-blur-xl rounded-2xl flex flex-col justify-center items-center relative">
           <img
             src="/logo.jpg"
             alt="logo"
@@ -77,10 +72,21 @@ export default function LoginPage() {
           />
           <button
             type="submit"
-            className="my-8 w-[300px] h-[50px] bg-amber-400 text-2xl text-white rounded-lg"
+            className="my-6 w-[300px] h-[50px] bg-amber-400 text-2xl text-white rounded-lg"
           >
             Login
           </button>
+
+          {/* Register Link */}
+          <p className="text-white">
+            Don’t have an account?{" "}
+            <Link
+              to="/register"
+              className="text-amber-300 underline hover:text-amber-400"
+            >
+              Register
+            </Link>
+          </p>
         </div>
       </form>
     </div>

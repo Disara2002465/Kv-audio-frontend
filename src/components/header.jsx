@@ -54,7 +54,7 @@ export default function Header() {
       />
       {token != null && ( // Ensure token is defined before using it
         <button
-          className="absolute   right-5 text-[24px] md:hidden"
+          className=" hidden md:block absolute right-5 text-[24px] "
           onClick={() => {
             localStorage.removeItem("token");
             window.location.href = "/login";
