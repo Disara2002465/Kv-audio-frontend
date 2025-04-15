@@ -1,199 +1,153 @@
-import { useState, useEffect } from "react";
-import { CiCirclePlus } from "react-icons/ci";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
+import mediaUpload from "../../utils/mediaUpload";
 
-export default function UpdateItemsPage() {
-  const location = useLocation(); // Ensure location is initialized before use
+export default function UpdateItemPage() {
+  const location = useLocation();
+
+  console.log(location);
+
+  const [productKey, setProductKey] = useState(location.state.key);
+  const [productName, setProductName] = useState(location.state.name);
+  const [productPrice, setProductPrice] = useState(location.state.price);
+  const [productCategory, setProductCategory] = useState(
+    location.state.category
+  );
+  const [productDimensions, setProductDimensions] = useState(
+    location.state.dimensions
+  );
+  const [productDescription, setProductDescription] = useState(
+    location.state.description
+  );
+  const [productImages, setProductImages] = useState([]);
   const navigate = useNavigate();
 
-  // Use optional chaining to prevent errors if location.state is undefined
-  const product = location.state || {};
-  console.log(product);
-
-  const [productKey, setProductKey] = useState(product.key || "");
-  const [productName, setProductName] = useState(product.name || "");
-  const [productPrice, setProductPrice] = useState(product.price || "");
-  const [productCategory, setProductCategory] = useState(
-    product.category || ""
-  );
-  const [productWidth, setProductWidth] = useState("");
-  const [productHeight, setProductHeight] = useState("");
-  const [productDepth, setProductDepth] = useState("");
-  const [productDescription, setProductDescription] = useState(
-    product.description || ""
-  );
-  // const [productImage, setProductImage] = useState("");
-
-  useEffect(() => {
-    if (product.dimensions) {
-      const [width, height, depth] = product.dimensions.split("*");
-      setProductWidth(width);
-      setProductHeight(height);
-      setProductDepth(depth);
-    }
-  }, [product.dimensions]);
-
-  // Function to validate form inputs
-  function validateForm() {
-    if (
-      !productKey ||
-      !productName ||
-      !productPrice ||
-      !productCategory ||
-      !productDescription
-      // !productImage
-    ) {
-      toast.error("Please fill in all required fields.");
-      return false;
-    }
-    if (isNaN(productPrice) || productPrice <= 0) {
-      toast.error("Price must be a valid number greater than 0.");
-      return false;
-    }
-    if (
-      (productWidth && isNaN(productWidth)) ||
-      (productHeight && isNaN(productHeight)) ||
-      (productDepth && isNaN(productDepth))
-    ) {
-      toast.error("Dimensions must be valid numbers.");
-      return false;
-    }
-    return true;
-  }
-
-  // Function to update an item
   async function handleUpdateItem() {
-    if (!validateForm()) return;
+    let updatingImages = location.state.image;
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-      toast.error("You are not authorized to update items.");
-      return;
+    if (productImages.length > 0) {
+      const promises = [];
+
+      //image 4
+      for (let i = 0; i < productImages.length; i++) {
+        console.log(productImages[i]);
+        const promise = mediaUpload(productImages[i]);
+        promises.push(promise);
+      }
+
+      updatingImages = await Promise.all(promises);
     }
 
-    const updatedItem = {
-      key: productKey,
-      name: productName,
-      price: parseFloat(productPrice),
-      category: productCategory,
-      dimensions: `${productWidth}*${productHeight}*${productDepth}`,
-      description: productDescription,
-      // imageUrl: productImage,
-      availability: true,
-    };
+    console.log(
+      productKey,
+      productName,
+      productPrice,
+      productCategory,
+      productDimensions,
+      productDescription
+    );
+    const token = localStorage.getItem("token");
 
-    try {
-      const result = await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/api/products/${productKey}`,
-        updatedItem,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      toast.success(result.data.message);
-      navigate("/admin/items");
-    } catch (err) {
-      console.error(err);
-      toast.error(err.response?.data?.error || "Error updating item");
+    if (token) {
+      try {
+        const result = await axios.put(
+          `${import.meta.env.VITE_BACKEND_URL}/api/products/${productKey}`,
+          {
+            name: productName,
+            price: productPrice,
+            category: productCategory,
+            dimensions: productDimensions,
+            description: productDescription,
+            image: updatingImages,
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          }
+        );
+        toast.success(result.data.message);
+        navigate("/admin/items");
+      } catch (err) {
+        toast.error(err.response.data.error);
+      }
+    } else {
+      toast.error("You are not authorized to add items");
     }
   }
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-gray-100">
-      <h1 className="text-2xl font-bold mb-4">Update Item</h1>
-
-      <div className="w-[400px] border border-gray-300 bg-white shadow-md rounded-lg p-6 flex flex-col items-center gap-4">
+    <div className="w-full h-full flex flex-col items-center p-4">
+      <h1 className="text-lg font-bold mb-4">Update Item</h1>
+      <div className="w-[400px] border p-4 flex flex-col items-center gap-2 rounded-lg shadow-md">
         <input
           disabled
           type="text"
           placeholder="Product Key"
           value={productKey}
           onChange={(e) => setProductKey(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
+          className="w-full p-2 border rounded"
         />
-
         <input
           type="text"
           placeholder="Product Name"
           value={productName}
           onChange={(e) => setProductName(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
+          className="w-full p-2 border rounded"
         />
-
         <input
           type="number"
-          placeholder="Product Price ($)"
+          placeholder="Product Price"
           value={productPrice}
           onChange={(e) => setProductPrice(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
+          className="w-full p-2 border rounded"
         />
         <select
           value={productCategory}
           onChange={(e) => setProductCategory(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
+          className="w-full p-2 border rounded"
         >
-          <option value="">Select Category</option>
-          <option value="Audio">Audio</option>
-          <option value="Lights">Lights</option>
+          <option value="audio">Audio</option>
+          <option value="lights">Lights</option>
         </select>
-
-        <div className="w-full flex gap-2">
-          <input
-            type="number"
-            placeholder="Width"
-            value={productWidth}
-            onChange={(e) => setProductWidth(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
-          />
-          <input
-            type="number"
-            placeholder="Height"
-            value={productHeight}
-            onChange={(e) => setProductHeight(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
-          />
-          <input
-            type="number"
-            placeholder="Depth"
-            value={productDepth}
-            onChange={(e) => setProductDepth(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
-          />
-        </div>
-
+        <input
+          type="text"
+          placeholder="Product Dimensions"
+          value={productDimensions}
+          onChange={(e) => setProductDimensions(e.target.value)}
+          className="w-full p-2 border rounded"
+        />
         <textarea
           type="text"
           placeholder="Product Description"
           value={productDescription}
           onChange={(e) => setProductDescription(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
+          className="w-full p-2 border rounded"
         />
-        {/* 
         <input
-          type="text"
-          placeholder="Product Image URL"
-          value={productImage}
-          onChange={(e) => setProductImage(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
-        /> */}
-
-        {/* Buttons */}
-        <div className="w-full flex gap-2">
-          <button
-            onClick={handleUpdateItem}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-600 transition"
-          >
-            <CiCirclePlus size={20} /> Update Item
-          </button>
-          <button
-            onClick={() => navigate("/admin/items")}
-            className="w-full px-4 py-2 bg-red-500 text-white font-bold rounded-md hover:bg-red-600 transition"
-          >
-            Cancel
-          </button>
-        </div>
+          type="file"
+          multiple
+          onChange={(e) => {
+            setProductImages(e.target.files);
+          }}
+          className="w-full p-2 border rounded"
+        />
+        <button
+          onClick={handleUpdateItem}
+          className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Update Item
+        </button>
+        <button
+          onClick={() => {
+            navigate("/admin/items");
+          }}
+          className="w-full p-2 bg-red-500 text-white rounded hover:bg-red-600"
+        >
+          Cancel
+        </button>
       </div>
     </div>
   );

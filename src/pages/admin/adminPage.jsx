@@ -2,11 +2,44 @@ import { BsGraphDown } from "react-icons/bs";
 import { FaRegBookmark, FaRegUser } from "react-icons/fa";
 import { MdOutlineSpeaker } from "react-icons/md";
 import { Routes, Route, Link } from "react-router-dom";
-import AdminItemsPage from "./adminItemsPage"; // Your Admin Items component
-import AddItemsPage from "./addItemsPage"; // Your Add Items component
-import UpdateItemsPage from "./updateItemPage"; // Your Update Items component
+import AdminItemsPage from "./adminItemsPage";
+import AddItemsPage from "./addItemsPage";
+import UpdateItemsPage from "./updateItemPage";
+import AdminUsersPage from "./adminUsersPage";
+import AdminOrdersPage from "./adminBookingPage";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function AdminPage() {
+  const [userValidated, setUserValidated] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      window.location.href = "/login";
+    }
+
+    axios
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/users/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        const user = res.data;
+        if (user.role !== "admin") {
+          setUserValidated(true);
+        } else {
+          window.location.href = "/";
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        setUserValidated(false);
+      });
+  }, []); // Corrected the useEffect hook
+
   return (
     <div className="w-full h-screen flex">
       {/* Sidebar */}
@@ -19,10 +52,10 @@ export default function AdminPage() {
         </Link>
 
         <Link
-          to="/admin/bookings"
+          to="/admin/orders"
           className="w-full h-[40px] text-[20px] font-bold flex items-center gap-2 p-2 hover:bg-green-300 rounded-md"
         >
-          <FaRegBookmark /> Booking
+          <FaRegBookmark /> Orders
         </Link>
 
         <Link
@@ -42,14 +75,16 @@ export default function AdminPage() {
 
       {/* Main Content */}
       <div className="w-[calc(100vw-200px)] p-4 bg-gray-100 text-black">
-        <Routes>
-          <Route path="/dashboard" element={<h1>Dashboard</h1>} />
-          <Route path="/bookings" element={<h1>Booking</h1>} />
-          <Route path="/items" element={<AdminItemsPage />} />
-          <Route path="/items/add" element={<AddItemsPage />} />
-          <Route path="/users" element={<h1>Users</h1>} />
-          <Route path="/items/edit" element={<UpdateItemsPage />} />
-        </Routes>
+        {userValidated && (
+          <Routes>
+            <Route path="/dashboard" element={<h1>Dashboard</h1>} />
+            <Route path="/orders" element={<AdminOrdersPage />} />
+            <Route path="/users" element={<AdminUsersPage />} />
+            <Route path="/items" element={<AdminItemsPage />} />
+            <Route path="/items/add" element={<AddItemsPage />} />
+            <Route path="/items/edit" element={<UpdateItemsPage />} />
+          </Routes>
+        )}
       </div>
     </div>
   );

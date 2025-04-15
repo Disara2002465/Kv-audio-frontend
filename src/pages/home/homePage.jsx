@@ -3,6 +3,8 @@ import Header from "../../components/header";
 import Contact from "./contact";
 import Gallery from "./gallery";
 import Items from "./items";
+import ProductOverview from "./productOverview";
+import BookingPage from "./bookingPage";
 
 export default function HomePage() {
   return (
@@ -11,10 +13,14 @@ export default function HomePage() {
       <div className="h-[calc(100vh-100px)] w-full  ">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/*" element={<Home />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/gallery" element={<Gallery />} />
+          <Route path="/booking" element={<BookingPage />} />
           <Route path="/items" element={<Items />} />
-          {/* <Route path="/*" element={<ErrorNotFound />} /> */}
+          <Route path="/product/:key" element={<ProductOverview />} />
+
+          {/* <Route path="/*" element={<ErrorNotFound />} /> 
           {/* Wildcard route for invalid paths */}
         </Routes>
       </div>
@@ -28,7 +34,9 @@ function Home() {
       className="h-full w-full bg-cover bg-center flex flex-col justify-center items-center text-white px-4"
       style={{ backgroundImage: "url('home.jpg')" }} // Change to your image path
     >
-      <h1 className="text-4xl font-bold mb-4">Welcome to Our Home Page</h1>
+      <h1 className="text-4xl font-bold mb-4 text-center w-full ">
+        Welcome to Our Home Page
+      </h1>
 
       <div className="bg-black bg-opacity-50 p-6 rounded-xl shadow-lg max-w-lg text-center">
         <h2 className="text-2xl font-semibold mb-2">OUR VISION</h2>
