@@ -90,7 +90,7 @@ const Contact = () => {
           transition={{ duration: 0.8 }}
         >
           <img
-            src="/con.jpg"
+            src="/contact.jpg"
             alt="Contact Us"
             className="w-full rounded-xl shadow-md"
           />
